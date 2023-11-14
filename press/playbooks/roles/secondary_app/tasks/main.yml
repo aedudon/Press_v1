@@ -1,0 +1,8 @@
+---
+- name: Add Primary Server Public Key to Authorized Keys
+  become: yes
+  become_user: frappe
+  authorized_key:
+    user: frappe
+    key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDXQpu5mWQVYHjmjSUHh8vVyM0c6S0jMXU4FuoGyVmxmPd4sVT2EvrlgFTGxs7YKWgd1w7nD/7xBB+da7Gv+6e8hzeIz8Mao8ELy7pqbRh0K5mVVEyj3vtL90uTDXLsLDyQQdN4V1L2K8f5Cn2xmo3wxsXmeYxsloROY2LzeB83JNf8BNbbWTLDRvYdvQhEWz02u2CHxoSOi8Kq33v80jLt5VfTwypC/GJ53JQYiW78xdr37yYkno7U2hA9mukWP8OCrh50/m15pdW/6shTeea7J2HJ78ZYMI7k4hmSVpu6anJsqINWawA8FbRFB/9YVru4dSuZquqSySIouaV3QaRFZeGhalu1+JPB4e9FfcpGMGKNb+j9voZyUSMczav0/tlQBtzSkhS1mM9L8ESLI28mCH8Tl2TkJvTYea4FFaVFIE3Stz+UbXDa1+Dbhhc7GQN92TVjkYUKhQx62YuYFndazrRjCHRDZNWnZkT5Z1cuDSNIabNLMOxlJ83RL+pNup8= frappe@f1-mbwcloud"
+    state: present

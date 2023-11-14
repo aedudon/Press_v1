@@ -1,0 +1,89 @@
+<template>
+	<Dialog
+		:options="{
+			title: 'Change Payment Mode',
+			actions: [
+				{
+					label: 'Change',
+					variant: 'solid',
+					loading: $resources.changePaymentMode.loading,
+					onClick: () => $resources.changePaymentMode.submit()
+				}
+			]
+		}"
+		:modelValue="modelValue"
+		@update:modelValue="$emit('update:modelValue', $event)"
+	>
+		<template v-slot:body-content>
+			<FormControl
+				label="Select Payment Mode"
+				type="select"
+				:options="paymentModeOptions"
+				v-model="paymentMode"
+			/>
+			<p class="mt-2 text-base text-gray-600">
+				{{ paymentModeDescription }}
+			</p>
+			<ErrorMessage
+				class="mt-2"
+				:message="$resources.changePaymentMode.error"
+			/>
+		</template>
+	</Dialog>
+</template>
+<script>
+export default {
+	name: 'ChangePaymentModeDialog',
+	props: ['modelValue'],
+	emits: ['update:modelValue'],
+	data() {
+		return {
+			paymentMode: this.$account.team.payment_mode
+		};
+	},
+	watch: {
+		show(value) {
+			if (!value) {
+				this.paymentMode = this.$account.team.payment_mode;
+			}
+		}
+	},
+	resources: {
+		changePaymentMode() {
+			return {
+				url: 'press.api.billing.change_payment_mode',
+				params: {
+					mode: this.paymentMode
+				},
+				onSuccess() {
+					this.$emit('update:modelValue', false);
+					this.$resources.changePaymentMode.reset();
+				},
+				validate() {
+					if (
+						this.paymentMode == 'Card' &&
+						!this.$account.team.default_payment_method
+					) {
+						return 'Please add a card first from Payment methods section';
+					}
+				}
+			};
+		}
+	},
+	computed: {
+		paymentModeDescription() {
+			return {
+				Card: `Your card will be charged for monthly subscription`,
+				'Prepaid Credits': `You will be charged from your account balance for monthly subscription`,
+				'Partner Credits': `You will be charged from your partner credits on frappe.io`
+			}[this.paymentMode];
+		},
+		paymentModeOptions() {
+			if (this.$account.team.erpnext_partner) {
+				return ['Card', 'Prepaid Credits', 'Partner Credits'];
+			}
+			return ['Card', 'Prepaid Credits'];
+		}
+	}
+};
+</script>
